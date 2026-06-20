@@ -6298,6 +6298,7 @@ function Library:Notify(...)
         Data.Description = tostring(Info.Description)
         Data.Time = Info.Time or 5
         Data.SoundId = Info.SoundId
+        Data.Volume = Info.Volume or 3
         Data.Steps = Info.Steps
         Data.Persist = Info.Persist
         Data.Icon = Info.Icon
@@ -6307,6 +6308,7 @@ function Library:Notify(...)
         Data.Description = tostring(Info)
         Data.Time = select(2, ...) or 5
         Data.SoundId = select(3, ...)
+        Data.Volume = select(4, ...) or 3
     end
     Data.Destroyed = false
 
@@ -6564,7 +6566,7 @@ function Library:Notify(...)
 
         New("Sound", {
             SoundId = SoundId,
-            Volume = 3,
+            Volume = Data.Volume,
             PlayOnRemove = true,
             Parent = SoundService,
         }):Destroy()
