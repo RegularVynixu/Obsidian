@@ -4297,9 +4297,19 @@ do
                 end
             end
 
+            local result1 = Library:SafeCallback(Toggle.Callback, Toggle.Value)
+            local result2 = Library:SafeCallback(Toggle.Changed, Toggle.Value)
+            if
+                Value
+                and (
+                    result1 == false
+                    or result2 == false
+                )
+            then
+                Toggle.Value = Value
+                Toggle:Display()
+            end
             Library:UpdateDependencyBoxes()
-            Library:SafeCallback(Toggle.Callback, Toggle.Value)
-            Library:SafeCallback(Toggle.Changed, Toggle.Value)
         end
 
         function Toggle:SetDisabled(Disabled: boolean)
