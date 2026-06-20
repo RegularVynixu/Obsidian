@@ -7919,6 +7919,10 @@ function Library:CreateWindow(WindowInfo)
             return Tab:AddTabbox({ Side = 2, Name = Name })
         end
 
+        function Tab:AddDynamicTabbox(Name)
+            return Tab:AddTabbox({ Side = Tab:GetShortestSide(), Name = Name })
+        end
+
         function Tab:Hover(Hovering)
             if Library.ActiveTab == Tab then
                 return
