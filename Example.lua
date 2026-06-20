@@ -221,6 +221,14 @@ LeftGroupBox:AddLabel("SecondTestLabel", {
 	DoesWrap = false, -- Defaults to false
 })
 
+LeftGroupBox:AddDualLabel("This is a", "dual label")
+LeftGroupBox:AddDualLabel("This is a dual label", "with a lot of text!")
+LeftGroupBox:AddDualLabel("SecondTestDualLabel", {
+	TextLeft = "This is a dual label",
+	TextRight = "which wraps its text!",
+	DoesWrap = true, -- Defaults to false
+})
+
 -- Options is a table added to getgenv() by the library
 -- You index Options with the specified index, in this case it is 'SecondTestLabel' & 'TestLabel'
 -- To set the text of the label you do label:SetText

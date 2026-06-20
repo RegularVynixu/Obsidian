@@ -3496,6 +3496,145 @@ do
         return Label
     end
 
+    function Funcs:AddDualLabel(...)
+        local Data = {}
+
+        local First = select(1, ...)
+        local Second = select(2, ...)
+
+        if typeof(First) == "table" or typeof(Second) == "table" then
+            local Params = typeof(First) == "table" and First or Second
+
+            Data.TextLeft = Params.TextLeft or ""
+            Data.TextRight = Params.TextRight or ""
+            Data.DoesWrap = Params.DoesWrap or false
+            Data.Size = Params.Size or 14
+            Data.Visible = Params.Visible or true
+            Data.Idx = typeof(Second) == "table" and First or nil
+        else
+            Data.TextLeft = First
+            Data.TextRight = Second
+            Data.DoesWrap = false
+            Data.Size = 14
+            Data.Visible = true
+            Data.Idx = First or nil
+        end
+
+        local Groupbox = self
+        local Container = Groupbox.Container
+
+        local DualLabel = {
+            TextLeft = Data.TextLeft,
+            TextRight = Data.TextRight,
+            DoesWrap = Data.DoesWrap,
+
+            Visible = Data.Visible,
+            Type = "DualLabel",
+        }
+
+        local Frame = New("Frame", {
+            BackgroundTransparency = 1,
+            Size = UDim2.new(1, 0, 0, 18),
+            Parent = Container
+        })
+
+        local TextLabelLeft = New("TextLabel", {
+            BackgroundTransparency = 1,
+            ClipsDescendants = not Data.DoesWrap,
+            Size = UDim2.new(0.5, 0, 1, 0),
+            Text = DualLabel.TextLeft,
+            TextSize = Data.Size,
+            TextWrapped = DualLabel.DoesWrap,
+            TextXAlignment = Enum.TextXAlignment.Left,
+            Parent = Frame,
+        })
+        
+        local TextLabelRight = New("TextLabel", {
+            BackgroundTransparency = 1,
+            ClipsDescendants = not Data.DoesWrap,
+            Size = UDim2.new(0.5, 0, 1, 0),
+            Position = UDim2.new(0.5, 0, 0, 0),
+            Text = DualLabel.TextRight,
+            TextSize = Data.Size,
+            TextWrapped = DualLabel.DoesWrap,
+            TextXAlignment = Enum.TextXAlignment.Right,
+            Parent = Frame,
+        })
+
+        function DualLabel:SetVisible(Visible: boolean)
+            DualLabel.Visible = Visible
+
+            Frame.Visible = DualLabel.Visible
+            Groupbox:Resize()
+        end
+
+        function DualLabel:SetText(TextLeft: string, TextRight: string)
+            DualLabel.TextLeft = TextLeft
+            TextLabelLeft.Text = TextLeft
+            DualLabel.TextRight = TextRight
+            TextLabelRight.Text = TextRight
+
+            if DualLabel.DoesWrap then
+                local _, YLeft =
+                    Library:GetTextBounds(DualLabel.TextLeft, TextLabelLeft.FontFace, TextLabelLeft.TextSize, TextLabelLeft.AbsoluteSize.X)
+                local _, YRight =
+                    Library:GetTextBounds(DualLabel.TextRight, TextLabelRight.FontFace, TextLabelRight.TextSize, TextLabelRight.AbsoluteSize.X)
+                local Offset = math.max(YLeft, YRight)
+                Frame.Size = UDim2.new(1, 0, 0, Offset + 4 * Library.DPIScale)
+            end
+
+            Groupbox:Resize()
+        end
+
+        if DualLabel.DoesWrap then
+            local _, YLeft =
+                Library:GetTextBounds(DualLabel.TextLeft, TextLabelLeft.FontFace, TextLabelLeft.TextSize, TextLabelLeft.AbsoluteSize.X)
+            local _, YRight =
+                Library:GetTextBounds(DualLabel.TextRight, TextLabelRight.FontFace, TextLabelRight.TextSize, TextLabelRight.AbsoluteSize.X)
+            local Offset = math.max(YLeft, YRight)
+            Frame.Size = UDim2.new(1, 0, 0, Offset + 4 * Library.DPIScale)
+        end
+
+        if Data.DoesWrap then
+            local Last = Frame.AbsoluteSize
+
+            Frame:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
+                if Frame.AbsoluteSize == Last then
+                    return
+                end
+
+                local _, YLeft =
+                    Library:GetTextBounds(DualLabel.TextLeft, TextLabelLeft.FontFace, TextLabelLeft.TextSize, TextLabelLeft.AbsoluteSize.X)
+                local _, YRight =
+                    Library:GetTextBounds(DualLabel.TextRight, TextLabelRight.FontFace, TextLabelRight.TextSize, TextLabelRight.AbsoluteSize.X)
+                local Offset = math.max(YLeft, YRight)
+                Frame.Size = UDim2.new(1, 0, 0, Offset + 4 * Library.DPIScale)
+
+                Last = Frame.AbsoluteSize
+                Groupbox:Resize()
+            end)
+        end
+
+        Groupbox:Resize()
+
+        DualLabel.TextLabel = TextLabelLeft
+        DualLabel.Container = Container
+        if not Data.DoesWrap then
+            setmetatable(DualLabel, BaseAddons)
+        end
+
+        DualLabel.Holder = Frame
+        table.insert(Groupbox.Elements, DualLabel)
+
+        if Data.Idx then
+            Options[Data.Idx] = DualLabel
+        else
+            table.insert(Options, DualLabel)
+        end
+
+        return DualLabel
+    end
+    
     function Funcs:AddButton(...)
         local function GetInfo(...)
             local Info = {}
