@@ -737,6 +737,10 @@ MenuGroup:AddDivider()
 MenuGroup:AddLabel("Menu bind")
 	:AddKeyPicker("MenuKeybind", { Default = "RightShift", NoUI = true, Text = "Menu keybind" })
 
+MenuGroup:AddButton("Panic", function()
+	SaveManager:Panic()
+end)
+
 MenuGroup:AddButton("Unload", function()
 	Library:Unload()
 end)
@@ -775,6 +779,10 @@ SaveManager:BuildConfigSection(Tabs["UI Settings"])
 -- Builds our theme menu (with plenty of built in themes) on the left side
 -- NOTE: you can also call ThemeManager:ApplyToGroupbox to add it to a specific groupbox
 ThemeManager:ApplyToTab(Tabs["UI Settings"])
+
+-- Save the current state of all the Library elements
+-- can be used later to instantly revert all values
+SaveManager:SavePanicState()
 
 -- You can use the SaveManager:LoadAutoloadConfig() to load a config
 -- which has been marked to be one that auto loads!

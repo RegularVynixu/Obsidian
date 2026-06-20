@@ -42,6 +42,7 @@ local SaveManager = {} do
     SaveManager.Folder = "ObsidianLibSettings"
     SaveManager.SubFolder = ""
     SaveManager.Ignore = {}
+    SaveManager.PanicState = {}
     SaveManager.Library = nil
     SaveManager.UseLoadingOrder = false
     SaveManager.LoadingOrder = {}
@@ -201,6 +202,29 @@ local SaveManager = {} do
     function SaveManager:SetSubFolder(folder)
         self.SubFolder = folder
         self:BuildFolderTree()
+    end
+
+    function SaveManager:SavePanicState()
+        local data = {}
+        for idx, option in pairs(self.Library.Options) do
+            if not option.Type then continue end
+            if not self.Parser[option.Type] then continue end
+            if self.Ignore[idx] then continue end
+
+            data[#data + 1] = self.Parser[option.Type].Save(idx, option)
+        end
+        self.PanicState = data
+    end
+
+    function SaveManager:Panic()
+        if #self.PanicState == 0 then return end
+
+        for _, option in pairs(self.PanicState) do
+            if not option.type then continue end
+            if not self.Parser[option.type] then continue end
+
+            task.spawn(self.Parser[option.type].Load, option.idx, option)
+        end
     end
 
     --// Save, Load, Delete, Refresh \\--
