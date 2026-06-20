@@ -7804,6 +7804,7 @@ function Library:CreateWindow(WindowInfo)
                     BackgroundTransparency = 1,
                     Size = UDim2.fromOffset(0, 16),
                     Text = Name,
+                    TextColor3 = "AccentColor",
                     TextSize = 15,
                     TextTransparency = 0.5,
                     Parent = ButtonContent,
