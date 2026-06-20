@@ -7601,6 +7601,7 @@ function Library:CreateWindow(WindowInfo)
 
             Groupbox:Resize()
             Tab.Groupboxes[Info.Name] = Groupbox
+            Library.Registry[GroupboxLabel].TextColor3 = "AccentColor"
 
             return Groupbox
         end
