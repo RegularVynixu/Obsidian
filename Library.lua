@@ -7492,6 +7492,23 @@ function Library:CreateWindow(WindowInfo)
             Tab:RefreshSides()
         end
 
+        function Tab:GetShortestSide(): number
+            -- This is the code of all time
+            local hL, hR = 0, 0
+            for _, side in next, Tab.Sides do
+                for _, frame in next, side:GetChildren() do
+                    if not frame:IsA("Frame") then continue end
+                    local height = frame.AbsoluteSize.Y
+                    if side == TabLeft then
+                        hL += height
+                    else
+                        hR += height
+                    end
+                end
+            end
+            return hL <= hR and 1 or 2
+        end
+
         function Tab:AddGroupbox(Info)
             local BoxHolder = New("Frame", {
                 AutomaticSize = Enum.AutomaticSize.Y,
@@ -7612,6 +7629,10 @@ function Library:CreateWindow(WindowInfo)
 
         function Tab:AddRightGroupbox(Name, IconName)
             return Tab:AddGroupbox({ Side = 2, Name = Name, IconName = IconName })
+        end
+
+        function Tab:AddDynamicGroupbox(Name, IconName)
+            return Tab:AddGroupbox({ Side = Tab:GetShortestSide(), Name = Name, IconName = IconName })
         end
 
         function Tab:AddTabbox(Info)
