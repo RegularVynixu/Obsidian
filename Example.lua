@@ -7,6 +7,48 @@ local Library = loadstring(game:HttpGet(repo .. "Library.lua"))()
 local ThemeManager = loadstring(game:HttpGet(repo .. "addons/ThemeManager.lua"))()
 local SaveManager = loadstring(game:HttpGet(repo .. "addons/SaveManager.lua"))()
 
+-- Example of a loading bar with 10 steps and an expanding sidebar
+local Loading = Library:CreateLoading({
+	Title = "mspaint",
+	Icon = 95816097006870,
+	IconSize = UDim2.fromOffset(30, 30),
+
+	LoadingIcon = Library.ImageManager.GetAsset("LoadingIcon"),
+	LoadingIconColor = nil,
+	LoadingIconTweenTime = 1,
+
+	CurrentStep = 0,
+	TotalSteps = 10,
+
+	ShowSidebar = false,
+	AutoResizeHeight = false,
+
+	WindowWidth = 450,
+	WindowHeight = 275,
+
+	ContentWidth = 450,
+	SidebarWidth = 250,
+})
+
+-- Display the content of the loading sidebar
+Loading.Sidebar:AddDualLabel("Hello, I'm", "a sidebar!")
+
+-- Iterate through the steps, handle your loading logic here
+for i = Loading.CurrentStep, Loading.TotalSteps do
+	Loading:SetCurrentStep(i)
+	Loading:SetMessage("Message " .. i)
+	Loading:SetDescription("Description " .. i)
+
+	if i == 5 then
+		Loading:ShowSidebarPage(true)
+	end
+
+	task.wait(1)
+end
+
+-- Destroy the loading bar before initializing the Window
+Loading:Destroy()
+
 local Options = Library.Options
 local Toggles = Library.Toggles
 
