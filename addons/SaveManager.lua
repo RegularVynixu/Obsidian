@@ -49,7 +49,7 @@ local SaveManager = {} do
     SaveManager.Parser = {
         Toggle = {
             Save = function(idx, object)
-                return { type = "Toggle", idx = idx, value = object.Value }
+                return { type = "Toggle", idx = idx, value = object.Value, order = object.Order }
             end,
             Load = function(idx, data)
                 local object = SaveManager.Library.Toggles[idx]
@@ -60,7 +60,7 @@ local SaveManager = {} do
         },
         Slider = {
             Save = function(idx, object)
-                return { type = "Slider", idx = idx, value = tostring(object.Value) }
+                return { type = "Slider", idx = idx, value = tostring(object.Value), order = object.Order }
             end,
             Load = function(idx, data)
                 local object = SaveManager.Library.Options[idx]
@@ -71,7 +71,7 @@ local SaveManager = {} do
         },
         Dropdown = {
             Save = function(idx, object)
-                return { type = "Dropdown", idx = idx, value = object.Value, multi = object.Multi }
+                return { type = "Dropdown", idx = idx, value = object.Value, multi = object.Multi, order = object.Order }
             end,
             Load = function(idx, data)
                 local object = SaveManager.Library.Options[idx]
@@ -82,7 +82,7 @@ local SaveManager = {} do
         },
         ColorPicker = {
             Save = function(idx, object)
-                return { type = "ColorPicker", idx = idx, value = object.Value:ToHex(), transparency = object.Transparency }
+                return { type = "ColorPicker", idx = idx, value = object.Value:ToHex(), transparency = object.Transparency, order = object.Order }
             end,
             Load = function(idx, data)
                 if SaveManager.Library.Options[idx] then
@@ -92,7 +92,7 @@ local SaveManager = {} do
         },
         KeyPicker = {
             Save = function(idx, object)
-                return { type = "KeyPicker", idx = idx, mode = object.Mode, key = object.Value, modifiers = object.Modifiers }
+                return { type = "KeyPicker", idx = idx, mode = object.Mode, key = object.Value, modifiers = object.Modifiers, order = object.Order }
             end,
             Load = function(idx, data)
                 if SaveManager.Library.Options[idx] then
@@ -102,7 +102,7 @@ local SaveManager = {} do
         },
         Input = {
             Save = function(idx, object)
-                return { type = "Input", idx = idx, text = object.Value }
+                return { type = "Input", idx = idx, text = object.Value, order = object.Order }
             end,
             Load = function(idx, data)
                 local object = SaveManager.Library.Options[idx]
@@ -292,6 +292,10 @@ local SaveManager = {} do
             end)
         end
 
+        table.sort(decoded.objects, function(a, b)
+            return (a.order or 1) < (b.order or 1)
+        end)
+        
         for _, option in decoded.objects do
             if not option.type then continue end
             if not self.Parser[option.type] then continue end

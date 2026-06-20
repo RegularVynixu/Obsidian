@@ -2160,6 +2160,7 @@ do
             Clicked = Info.Clicked,
 
             Type = "KeyPicker",
+            Order = Info.Order,
         }
 
         if KeyPicker.Mode == "Press" then
@@ -2851,6 +2852,7 @@ do
             Changed = Info.Changed,
 
             Type = "ColorPicker",
+            Order = Info.Order,
         }
         ColorPicker.Hue, ColorPicker.Sat, ColorPicker.Vib = ColorPicker.Value:ToHSV()
 
@@ -3964,6 +3966,7 @@ do
 
             Variant = "Checkbox",
             Type = "Toggle",
+            Order = Info.Order,
         }
 
         local Button = New("TextButton", {
@@ -4171,6 +4174,7 @@ do
 
             Variant = "Switch",
             Type = "Toggle",
+            Order = Info.Order,
         }
 
         local Button = New("TextButton", {
@@ -4410,6 +4414,7 @@ do
             Visible = Info.Visible,
 
             Type = "Input",
+            Order = Info.Order,
         }
 
         local Holder = New("Frame", {
@@ -4599,6 +4604,7 @@ do
             Visible = Info.Visible,
 
             Type = "Slider",
+            Order = Info.Order,
         }
 
         local Holder = New("Frame", {
@@ -4897,6 +4903,7 @@ do
             Visible = Info.Visible,
 
             Type = "Dropdown",
+            Order = Info.Order,
         }
 
         local Holder = New("Frame", {
