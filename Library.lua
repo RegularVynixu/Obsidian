@@ -3506,8 +3506,10 @@ do
 
         if Data.Idx then
             Labels[Data.Idx] = Label
+            Options[Data.Idx] = Label
         else
             table.insert(Labels, Label)
+            table.insert(Options, Label)
         end
 
         return Label
@@ -3644,8 +3646,10 @@ do
         table.insert(Groupbox.Elements, DualLabel)
 
         if Data.Idx then
+            Labels[Data.Idx] = DualLabel
             Options[Data.Idx] = DualLabel
         else
+            table.insert(Labels, DualLabel)
             table.insert(Options, DualLabel)
         end
 
@@ -3891,8 +3895,10 @@ do
 
             if Info.Idx then
                 Buttons[Info.Idx] = SubButton
+                Options[Info.Idx] = SubButton
             else
                 table.insert(Buttons, SubButton)
+                table.insert(Options, SubButton)
             end
 
             return SubButton
@@ -3954,8 +3960,10 @@ do
 
         if Info.Idx then
             Buttons[Info.Idx] = Button
+            Options[Info.Idx] = Button
         else
             table.insert(Buttons, Button)
+            table.insert(Options, Button)
         end
 
         return Button
@@ -4162,6 +4170,7 @@ do
         Toggle.Default = Toggle.Value
 
         Toggles[Idx] = Toggle
+        Options[Idx] = Toggle
 
         return Toggle
     end
@@ -4397,6 +4406,7 @@ do
         Toggle.Default = Toggle.Value
 
         Toggles[Idx] = Toggle
+        Options[Idx] = Toggle
 
         return Toggle
     end
