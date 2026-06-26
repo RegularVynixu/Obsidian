@@ -7,6 +7,9 @@ local Library = loadstring(game:HttpGet(repo .. "Library.lua"))()
 local ThemeManager = loadstring(game:HttpGet(repo .. "addons/ThemeManager.lua"))()
 local SaveManager = loadstring(game:HttpGet(repo .. "addons/SaveManager.lua"))()
 
+-- IsUserPremium is used for dynamic Premium tooltips
+Library.IsUserPremium = false
+
 -- Example of a loading bar with 10 steps and an expanding sidebar
 local Loading = Library:CreateLoading({
 	Title = "mspaint",
@@ -237,6 +240,29 @@ local MyDisabledButton = LeftGroupBox:AddButton({
 	Tooltip = "This is a disabled button",
 	DisabledTooltip = "I am disabled!", -- Information shown when you hover over the button while it's disabled
 	Disabled = true,
+})
+
+local MyPremiumButton = LeftGroupBox:AddButton({
+	Text = "Premium Button",
+	Premium = true,
+	Disabled = not Library.IsUserPremium,
+	Func = function()
+		print("You clicked a Premium-only button!")
+	end,
+	Tooltip = "Hey, you're an awesome Premium user!",
+
+	-- DisabledTooltip is automatically set for Premium features, but can be overwritten
+	-- You can customise the default premium tooltip using Library.PremiumTooltip
+})
+
+LeftGroupBox:AddToggle("TogglePremium", {
+	Text = "Toggle Premium",
+	Tooltip = "Toggle the Premium state, so you can notice the changes in the button above.",
+	Default = false,
+	Callback = function(Value)
+		Library.IsUserPremium = Value
+		MyPremiumButton:SetDisabled(not Value)
+	end
 })
 
 --[[

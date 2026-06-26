@@ -238,6 +238,9 @@ local Library = {
 
     ImageManager = CustomImageManager,
     ShowCursorBinding = string.sub(tostring({}), 10),
+    
+    IsUserPremium = false,
+    PremiumTooltip = "This feature is <font color='#FDBB36'>Premium</font> only.",
 }
 
 if RunService:IsStudio() then
@@ -1945,6 +1948,7 @@ end))
 local TooltipLabel = New("TextLabel", {
     AutomaticSize = Enum.AutomaticSize.Y,
     BackgroundColor3 = "BackgroundColor",
+    RichText = true,
     TextSize = 14,
     TextWrapped = true,
     Visible = false,
@@ -1991,7 +1995,7 @@ TooltipLabel:GetPropertyChangedSignal("AbsolutePosition"):Connect(function()
 end)
 
 local CurrentHoverInstance
-function Library:AddTooltip(InfoStr: string, DisabledInfoStr: string, HoverInstance: GuiObject)
+function Library:AddTooltip(element: any, HoverInstance: GuiObject)
     local TooltipTable = {
         Disabled = false,
         Hovering = false,
@@ -1999,6 +2003,17 @@ function Library:AddTooltip(InfoStr: string, DisabledInfoStr: string, HoverInsta
     }
 
     local function DoHover()
+        local InfoStr = element.Tooltip
+        local DisabledInfoStr = element.DisabledTooltip
+        
+        if
+            element.Premium
+            and not DisabledInfoStr
+            and not Library.IsUserPremium
+        then
+            DisabledInfoStr = Library.PremiumTooltip
+        end
+
         if
             CurrentHoverInstance == HoverInstance
             or Library.ActiveDialog
@@ -3655,6 +3670,7 @@ do
                 Info.DisabledTooltip = Params.DisabledTooltip
 
                 Info.Risky = Params.Risky or false
+                Info.Premium = Params.Premium or false
                 Info.Disabled = Params.Disabled or false
                 Info.Visible = Params.Visible or true
                 Info.Idx = typeof(Second) == "table" and First or nil
@@ -3667,6 +3683,7 @@ do
                 Info.DisabledTooltip = nil
 
                 Info.Risky = false
+                Info.Premium = false
                 Info.Disabled = false
                 Info.Visible = true
                 Info.Idx = select(3, ...) or nil
@@ -3694,6 +3711,7 @@ do
 
             Tween = nil,
             Type = "Button",
+            Premium = Info.Premium,
         }
 
         local Holder = New("Frame", {
@@ -3812,6 +3830,7 @@ do
 
                 Tween = nil,
                 Type = "SubButton",
+                Premium = Info.Premium,
             }
 
             Button.SubButton = SubButton
@@ -3859,7 +3878,7 @@ do
 
             if typeof(SubButton.Tooltip) == "string" or typeof(SubButton.DisabledTooltip) == "string" then
                 SubButton.TooltipTable =
-                    Library:AddTooltip(SubButton.Tooltip, SubButton.DisabledTooltip, SubButton.Base)
+                    Library:AddTooltip(SubButton, SubButton.Base)
                 SubButton.TooltipTable.Disabled = SubButton.Disabled
             end
 
@@ -3918,7 +3937,7 @@ do
         end
 
         if typeof(Button.Tooltip) == "string" or typeof(Button.DisabledTooltip) == "string" then
-            Button.TooltipTable = Library:AddTooltip(Button.Tooltip, Button.DisabledTooltip, Button.Base)
+            Button.TooltipTable = Library:AddTooltip(Button, Button.Base)
             Button.TooltipTable.Disabled = Button.Disabled
         end
 
@@ -3966,6 +3985,7 @@ do
 
             Variant = "Checkbox",
             Type = "Toggle",
+            Premium = Info.Premium,
             Order = Info.Order,
         }
 
@@ -4120,7 +4140,7 @@ do
         end)
 
         if typeof(Toggle.Tooltip) == "string" or typeof(Toggle.DisabledTooltip) == "string" then
-            Toggle.TooltipTable = Library:AddTooltip(Toggle.Tooltip, Toggle.DisabledTooltip, Button)
+            Toggle.TooltipTable = Library:AddTooltip(Toggle, Button)
             Toggle.TooltipTable.Disabled = Toggle.Disabled
         end
 
@@ -4174,6 +4194,7 @@ do
 
             Variant = "Switch",
             Type = "Toggle",
+            Premium = Info.Premium,
             Order = Info.Order,
         }
 
@@ -4354,7 +4375,7 @@ do
         end)
 
         if typeof(Toggle.Tooltip) == "string" or typeof(Toggle.DisabledTooltip) == "string" then
-            Toggle.TooltipTable = Library:AddTooltip(Toggle.Tooltip, Toggle.DisabledTooltip, Button)
+            Toggle.TooltipTable = Library:AddTooltip(Toggle, Button)
             Toggle.TooltipTable.Disabled = Toggle.Disabled
         end
 
@@ -4414,6 +4435,7 @@ do
             Visible = Info.Visible,
 
             Type = "Input",
+            Premium = Info.Premium,
             Order = Info.Order,
         }
 
@@ -4554,7 +4576,7 @@ do
         end
 
         if typeof(Input.Tooltip) == "string" or typeof(Input.DisabledTooltip) == "string" then
-            Input.TooltipTable = Library:AddTooltip(Input.Tooltip, Input.DisabledTooltip, Box)
+            Input.TooltipTable = Library:AddTooltip(Input, Box)
             Input.TooltipTable.Disabled = Input.Disabled
         end
 
@@ -4604,6 +4626,7 @@ do
             Visible = Info.Visible,
 
             Type = "Slider",
+            Premium = Info.Premium,
             Order = Info.Order,
         }
 
@@ -4846,7 +4869,7 @@ do
         end)
 
         if typeof(Slider.Tooltip) == "string" or typeof(Slider.DisabledTooltip) == "string" then
-            Slider.TooltipTable = Library:AddTooltip(Slider.Tooltip, Slider.DisabledTooltip, Bar)
+            Slider.TooltipTable = Library:AddTooltip(Slider, Bar)
             Slider.TooltipTable.Disabled = Slider.Disabled
         end
 
@@ -4903,6 +4926,7 @@ do
             Visible = Info.Visible,
 
             Type = "Dropdown",
+            Premium = Info.Premium,
             Order = Info.Order,
         }
 
@@ -5421,7 +5445,7 @@ do
         end
 
         if typeof(Dropdown.Tooltip) == "string" or typeof(Dropdown.DisabledTooltip) == "string" then
-            Dropdown.TooltipTable = Library:AddTooltip(Dropdown.Tooltip, Dropdown.DisabledTooltip, DisplayContainer)
+            Dropdown.TooltipTable = Library:AddTooltip(Dropdown, DisplayContainer)
             Dropdown.TooltipTable.Disabled = Dropdown.Disabled
         end
 
