@@ -12469,6 +12469,7 @@ function Library:CreateWindow(WindowInfo)
                     BackgroundTransparency = 1,
                     Size = UDim2.fromScale(1, 0),
                     Text = Info.Name,
+                    TextColor3 = "AccentColor",
                     TextSize = 15,
                     TextWrapped = true,
                     TextXAlignment = Enum.TextXAlignment.Left,
@@ -12742,7 +12743,6 @@ function Library:CreateWindow(WindowInfo)
 
             Groupbox:Resize()
             Tab.Groupboxes[Info.Name] = Groupbox
-            Library.Registry[GroupboxLabel].TextColor3 = "AccentColor"
 
             if Info.Visible == false then
                 Groupbox:Hide()
