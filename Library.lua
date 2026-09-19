@@ -11959,6 +11959,23 @@ function Library:CreateWindow(WindowInfo)
 
             Tab:RefreshSides()
         end
+                
+        function Tab:GetShortestSide(): number
+            -- This is the code of all time
+            local hL, hR = 0, 0
+            for _, side in next, Tab.Sides do
+                for _, frame in next, side:GetChildren() do
+                    if not frame:IsA("Frame") then continue end
+                    local height = frame.AbsoluteSize.Y
+                    if side == TabLeft then
+                        hL += height
+                    else
+                        hR += height
+                    end
+                end
+            end
+            return hL <= hR and 1 or 2
+        end
 
         local function AddTabbox(self, Info)
             Info = Library:Validate(Info, Templates.Tabbox)
@@ -12226,23 +12243,6 @@ function Library:CreateWindow(WindowInfo)
 
                     ButtonCorner.TopLeftRadius = UDim.new(0, TabIndex == FirstTab and Radius or 0)
                     ButtonCorner.TopRightRadius = UDim.new(0, TabIndex == LastTab and Radius or 0)
-                end
-                
-                function Tab:GetShortestSide(): number
-                    -- This is the code of all time
-                    local hL, hR = 0, 0
-                    for _, side in next, Tab.Sides do
-                        for _, frame in next, side:GetChildren() do
-                            if not frame:IsA("Frame") then continue end
-                            local height = frame.AbsoluteSize.Y
-                            if side == TabLeft then
-                                hL += height
-                            else
-                                hR += height
-                            end
-                        end
-                    end
-                    return hL <= hR and 1 or 2
                 end
 
                 function Tab:Destroy()
