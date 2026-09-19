@@ -648,8 +648,10 @@ function SaveManager:SavePanicState()
     local data = {}
     for idx, option in pairs(self.Library.Options) do
         if not option.Type then continue end
-        if not self.Parser[option.Type] then continue end
         if self.Ignore[idx] then continue end
+
+        local Parser = ElementParser[option.Type]
+        if not Parser then continue end
 
         table.insert(data, Parser.Save(idx, option))
     end
@@ -659,7 +661,9 @@ end
 function SaveManager:Panic()
     for _, option in pairs(self.PanicState) do
         if not option.type then continue end
-        if not self.Parser[option.type] then continue end
+        
+        local Parser = ElementParser[option.type]
+        if not Parser then continue end
 
         task.defer(Parser.Load, option.idx, option)
     end
