@@ -7355,7 +7355,7 @@ do
             local result1 = Library:SafeCallback(Toggle.Callback, Toggle.Value)
             local result2 = Library:SafeCallback(Toggle.Changed, Toggle.Value)
             if
-                Value
+                Toggle.Value
                 and (
                     result1 == false
                     or result2 == false
