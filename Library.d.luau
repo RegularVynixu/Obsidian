@@ -106,6 +106,7 @@ export type ButtonInfo = {
     Text: string,
     Func: (FromKeyPicker: boolean?) -> (),
     DoubleClick: boolean?,
+    Icon: string?,
     Tooltip: string?,
     DisabledTooltip: string?,
     Risky: boolean?,
@@ -172,6 +173,7 @@ export type DropdownInfo = {
     Multi: boolean?,
     DragSelect: boolean?,
     MaxVisibleDropdownItems: number?,
+    KeepDisabledValuePosition: boolean?,
     SpecialType: "Player" | "Team"?,
     ExcludeLocalPlayer: boolean?,
     EnablePlayerImages: boolean?,
@@ -277,6 +279,7 @@ export type KeyPicker = {
     Clicked: () -> (),
     Type: "KeyPicker",
     Menu: ContextMenu,
+    MenuVisible: boolean,
 
     Display: (self: KeyPicker) -> (),
     Update: (self: KeyPicker) -> (),
@@ -286,6 +289,7 @@ export type KeyPicker = {
     DoClick: (self: KeyPicker) -> (),
     SetValue: (self: KeyPicker, Data: { string }) -> (),
     SetText: (self: KeyPicker, Text: string) -> (),
+    SetMenuVisibility: (self: KeyPicker, Visible: boolean) -> (),
     Destroy: (self: KeyPicker) -> (),
 }
 
@@ -338,6 +342,7 @@ export type Button = {
     Text: string,
     Func: (FromKeyPicker: boolean?) -> (),
     DoubleClick: boolean?,
+    Icon: string?,
     Tooltip: string?,
     DisabledTooltip: string?,
     TooltipTable: Tooltip?,
@@ -348,6 +353,8 @@ export type Button = {
     Type: "Button",
     Base: TextButton,
     Stroke: UIStroke,
+    Label: TextLabel,
+    IconImage: ImageLabel?,
     Holder: Frame,
     SubButton: SubButton?,
     Parent: BaseGroupbox,
@@ -357,6 +364,7 @@ export type Button = {
     SetDisabled: (self: Button, Disabled: boolean) -> (),
     SetVisible: (self: Button, Visible: boolean) -> (),
     SetText: (self: Button, Text: string) -> (),
+    SetIcon: (self: Button, Icon: string?) -> (),
     Destroy: (self: Button) -> (),
 }
 
@@ -364,6 +372,7 @@ export type SubButton = {
     Text: string,
     Func: (FromKeyPicker: boolean?) -> (),
     DoubleClick: boolean?,
+    Icon: string?,
     Tooltip: string?,
     DisabledTooltip: string?,
     TooltipTable: Tooltip?,
@@ -374,11 +383,14 @@ export type SubButton = {
     Type: "SubButton",
     Base: TextButton,
     Stroke: UIStroke,
+    Label: TextLabel,
+    IconImage: ImageLabel?,
 
     UpdateColors: (self: SubButton) -> (),
     SetDisabled: (self: SubButton, Disabled: boolean) -> (),
     SetVisible: (self: SubButton, Visible: boolean) -> (),
     SetText: (self: SubButton, Text: string) -> (),
+    SetIcon: (self: SubButton, Icon: string?) -> (),
     Destroy: (self: SubButton) -> (),
 }
 
@@ -488,6 +500,7 @@ export type Dropdown = {
     ValueImages: { [any]: string }?,
     Multi: boolean,
     DragSelect: boolean,
+    KeepDisabledValuePosition: boolean,
     SpecialType: "Player" | "Team"?,
     ExcludeLocalPlayer: boolean?,
     EnablePlayerImages: boolean?,
@@ -697,6 +710,8 @@ export type Groupbox = BaseGroupbox & {
     PopOutEnabled: boolean,
     PopOutFloat: Frame?,
     PopOutPlaceholder: Frame?,
+    PopOutMaxHeight: number?,
+    PopOutWidth: number?,
     BoxHolder: Frame,
     Holder: Frame,
     Container: Frame,
@@ -711,9 +726,12 @@ export type Groupbox = BaseGroupbox & {
     SetPoppedOut: (self: Groupbox, Value: boolean, FloatPosition: UDim2?) -> (),
     TogglePoppedOut: (self: Groupbox) -> (),
     RefreshPopOutPlaceholder: (self: Groupbox) -> (),
+    SetMaxPopOutHeight: (self: Groupbox, Height: number?) -> (),
+    SetPopOutWidth: (self: Groupbox, Width: number?) -> (),
 }
 
 export type SubTab = BaseGroupbox & {
+    Type: "SubTab",
     ButtonHolder: TextButton,
     Container: Frame,
     Tab: Tab,
@@ -734,11 +752,13 @@ export type Tabbox = {
     PopOutEnabled: boolean,
     PopOutFloat: Frame?,
     PopOutPlaceholder: Frame?,
+    PopOutMaxHeight: number?,
+    PopOutWidth: number?,
     ActiveTab: SubTab?,
     BoxHolder: Frame,
     Holder: Frame,
     Tabs: { [string]: SubTab },
-    ParentBox: Groupbox?,
+    ParentBox: (Groupbox | SubTab)?,
 
     AddTab: (self: Tabbox, Name: string, IconName: string?) -> (SubTab, number),
     Resize: (self: Tabbox) -> (),
@@ -746,6 +766,8 @@ export type Tabbox = {
     SetPoppedOut: (self: Tabbox, Value: boolean, FloatPosition: UDim2?) -> (),
     TogglePoppedOut: (self: Tabbox) -> (),
     RefreshPopOutPlaceholder: (self: Tabbox) -> (),
+    SetMaxPopOutHeight: (self: Tabbox, Height: number?) -> (),
+    SetPopOutWidth: (self: Tabbox, Width: number?) -> (),
 }
 
 export type Tab = {
@@ -774,6 +796,8 @@ export type Tab = {
             Collapsed: boolean?,
             DisableCollapsing: boolean?,
             PopOut: boolean?,
+            MaxPopOutHeight: number?,
+            PopOutWidth: number?,
         }
     ) -> Groupbox,
     AddLeftGroupbox: (
@@ -792,7 +816,7 @@ export type Tab = {
         Collapsed: boolean?,
         DisableCollapsing: boolean?
     ) -> Groupbox,
-    AddTabbox: (self: Tab, Info: { Side: number | string, Name: string?, PopOut: boolean? }) -> Tabbox,
+    AddTabbox: (self: Tab, Info: { Side: number | string, Name: string?, PopOut: boolean?, MaxPopOutHeight: number?, PopOutWidth: number? }) -> Tabbox,
     AddLeftTabbox: (self: Tab, Name: string?) -> Tabbox,
     AddRightTabbox: (self: Tab, Name: string?) -> Tabbox,
     Hover: (self: Tab, Hovering: boolean) -> (),
